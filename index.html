@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+
+        #each_data {
+
+
+            margin-top: 10px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+            padding-left: 10px;
+            box-shadow: 3px 3px 2px 2px rgb(182, 182, 182);
+            padding-bottom: 15px;
+        }
+
+        .search-bar {
+            background-color: #ead9fc;
+            padding: 15px;
+
+        }
+
+        #browse {
+            border: none;
+            height: 35px;
+            border-radius: 10px;
+        }
+
+        #search-button {
+            color: white;
+            height: 35px;
+            border-radius: 10px;
+            border: none;
+            background-color: rgb(85, 85, 250);
+            padding: 10px;
+            margin-top: 5px;
+
+
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+
+        function search() {
+            document.getElementById("load").style.height="50px";
+            document.getElementById("load").style.width="50px";
+
+            let displaydiv = document.getElementById("result-div");
+            displaydiv.textContent = "";
+
+            let searchbox = document.getElementById("browse");
+            //console.log("hgfy")
+            let search_string = searchbox.value;
+            let url = "https://apis.ccbp.in/wiki-search?search=" + search_string;
+            let option = {
+                method: "GET"
+            }
+
+            fetch(url, option)
+                .then(function (response) {
+                    return response.json();
+
+                })
+
+                .then(function (jsonData) {
+                    let { search_results } = jsonData;
+                    //console.log(search_results)
+
+                    appendResult(search_results);
+
+                })
+
+        }
+
+        function display(data) {
+            let { title, link, description } = data;
+            //console.log(title);
+            //console.log(link);
+            //console.log(description);
+
+            let displaydiv = document.getElementById("result-div");
+
+            let eachdiv = document.createElement("div");
+            eachdiv.id = "each_data"
+
+            let titlee = document.createElement("h4");
+            titlee.textContent = title;
+            eachdiv.appendChild(titlee);
+
+            let linkk = document.createElement("a");
+            linkk.textContent = link;
+            linkk.href = link;
+
+
+            eachdiv.appendChild(linkk);
+
+
+            let descriptionn = document.createElement("p");
+            descriptionn.textContent = description;
+            eachdiv.appendChild(descriptionn);
+
+            document.getElementById("load").style.height="0px"
+            document.getElementById("load").style. width="0px"
+
+
+            displaydiv.appendChild(eachdiv);
+
+
+        }
+
+        function appendResult(search_result) {
+            let len = search_result.length;
+            if (len == 0) {
+                let displaydiv = document.getElementById("result-div");
+                displaydiv.textContent = "No Results Found "
+            }
+            for (let index = 0; index < len; index++) {
+                var eachitem = search_result[index]
+                display(eachitem);
+                //console.log(data)
+
+
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <center>
+
+        <div class="search-bar">
+            <h1>WIKIPEDIA SEARCH</h1>
+            <input type="search" placeholder="Search Here" id="browse">
+
+            <button id="search-button" onclick="search()">search</button>
+        </div>
+
+    </center>
+    <div id="load">
+        <div class="spinner-box">
+            <div class="circle-border">
+                <div class="circle-core"></div>
+            </div>
+        </div>
+    </div>
+    <div id="result-div"></div>
+
+</body>
+
+</html>
